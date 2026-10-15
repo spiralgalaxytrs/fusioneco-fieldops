@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:technician_portal/app/env.dart';
 import 'package:technician_portal/core/utils/qr_payload.dart';
 
 void main() {
@@ -55,9 +56,10 @@ void main() {
 
   group('scanned links', () {
     test('one of our own public pages is offered as a record', () {
-      // Env.webBaseUrl defaults to the emulator host on port 3000.
+      // Built from Env.webBaseUrl so the test follows its default (and any
+      // --dart-define=WEB_BASE_URL) instead of pinning one host.
       final resolution =
-          resolveScannedValue('http://10.0.2.2:3000/public/assets/a-1');
+          resolveScannedValue('${Env.webBaseUrl}/public/assets/a-1');
 
       expect(resolution, isA<ScannedRecord>());
       expect((resolution as ScannedRecord).path, '/public/assets/a-1');
@@ -65,7 +67,7 @@ void main() {
 
     test('a same-host link outside /public is just an external link', () {
       final resolution =
-          resolveScannedValue('http://10.0.2.2:3000/facility-management');
+          resolveScannedValue('${Env.webBaseUrl}/facility-management');
 
       expect(resolution, isA<ScannedExternal>());
       expect((resolution as ScannedExternal).isUrl, isTrue);

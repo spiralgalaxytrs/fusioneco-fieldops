@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:technician_portal/core/storage/session_store.dart';
 import 'package:technician_portal/core/utils/currency.dart';
 import 'package:technician_portal/domain/history_entry.dart';
@@ -23,6 +24,9 @@ const _testEnStrings = {
 };
 
 Future<BuildContext> _localizedContext(WidgetTester tester) async {
+  // ensureInitialized reads the saved language from SharedPreferences; without
+  // the in-memory mock that platform call never answers and the test hangs.
+  SharedPreferences.setMockInitialValues({});
   final localization = FlutterLocalization.instance;
   await localization.ensureInitialized();
   localization.init(
